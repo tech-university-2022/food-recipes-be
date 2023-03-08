@@ -3,10 +3,10 @@ import db from '../../config/db.js';
 
 const router = express.Router();
 
+router.post('/create', (req, res) => {
+    const { email, password } = req.body
 
-router.get('/', (req, res) => {
-    db
-    res.send('Hello')
+    res.send(email + password)
 })
 
 
