@@ -1,7 +1,7 @@
-import express from 'express';
-import { createAccount, login } from '../../controllers/account.controller.js';
-import mapResponse from '../../middlewares/response.middleware.js'
-import auth from '../../middlewares/auth.middleware.js'
+const express = require('express');
+const { createAccount, login } = require('../../controllers/account.controller.js');
+const mapResponse = require('../../middlewares/response.middleware.js')
+const auth = require('../../middlewares/auth.middleware.js');
 
 const router = express.Router();
 
@@ -15,5 +15,4 @@ router.get('/protected', auth, (req, res, next) => {
 
 
 
-
-export { router as accountRouter };
+module.exports = { accountRouter: router };
