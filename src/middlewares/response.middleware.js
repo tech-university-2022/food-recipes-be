@@ -1,8 +1,7 @@
 import generateBaseResponse from "../utils/base-response.js";
 
 function mapResponse(req, res, next) {
-    console.log('Here')
-    res.json(generateBaseResponse(res.locals.data))
+    res.json(generateBaseResponse(res.body))
     next()
 }
 
