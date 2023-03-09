@@ -1,34 +1,19 @@
 import express from 'express';
-import db from '../../config/db.js';
-import { hash } from './../../services/auth.service.js'
-import mapResponse from '../../middlewares/response.middleware.js';
+import { createAccount, login } from '../../controllers/account.controller.js';
+import mapResponse from '../../middlewares/response.middleware.js'
+import auth from '../../middlewares/auth.middleware.js'
 
 const router = express.Router();
 
-router.post('/create', async (req, res, next) => {
-    try {
-        const { name, email, password, avatarUrl, metadata } = req.body
-        const user = await db.account.create({
-            data: {
-                "name": name,
-                "email": email,
-                "password": hash(password),
-                "avatarUrl": avatarUrl,
-                "metadata": metadata
-            }
-        })
+router.post('/create', createAccount)
 
-        let { password: _, ...extractedUser } = user;
+router.post('/login', login)
 
-        res.locals.data = extractedUser
-
-        next()
-
-    } catch (e) {
-        next(e)
-    }
-
+router.get('/protected', auth, (req, res, next) => {
+    res.json({ "accountId": req.accountId })
 })
+
+
 
 
 export { router as accountRouter };
