@@ -12,18 +12,9 @@ router.post('/login', login)
 router.get('/protected', auth, (req, res, next) => {
     res.json({ "accountId": req.accountId })
 })
-router.use(auth)
 router.patch('/update',auth, update,(req,res,next)=>{
-    if(req.accountId != req.accountId.toString()){
-        return res.status(403).send("Forbidden to edit another user");
-     }
-    const { error } = auth(req.accountId);
     const updatedInfor = update()
-    if(error) return res.status(400).send(error.details[0].message)
-    else {
-        res.status(200).send(updatedInfor)
-    }
-   
+    res.send(updatedInfor)
 })
 router.delete('/delete/accountId',auth,deleteAccount)
 

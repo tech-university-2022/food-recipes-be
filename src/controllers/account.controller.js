@@ -25,7 +25,7 @@ const update = catchAsync(async (req,res)=>{
     const {email,newName,newAvatarUrl} = req.body
     try{
         const updatedInfor = await accountService.updateAccount(email,newName,newAvatarUrl)
-        res=>res.json(updatedInfor)
+        res.status(200).send('Update successfully')
     }catch(error){
         res.status(500).send("Error occurs:" + error)
     }
