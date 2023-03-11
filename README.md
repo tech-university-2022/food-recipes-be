@@ -51,7 +51,8 @@ npx run generate
 ```
 
 # Development
-## Add authentication middleware
+## Authrntication
+### Add authentication middleware
 > In order to use authentication middleware, add it in the router or controller before the request handler
 
 **router.js**
@@ -68,9 +69,37 @@ router.get('/protected', auth, (req, res, next) => {
 })
 ```
 
-## Access user detail after authenticated
+### Access user detail after authenticated
 > Inside the request, there will be accountId field. If user exists, this should return the account ID of logged user
 ```
 req.accountId
 ```
 
+## Base response and errors handling
+> Application's layers is already wrapped by default error handler. Consider using this implementation to make the application error handle more universial
+
+
+1. Place `catchAsync` function before each route 
+```
+const viewMyAccount = catchAsync(async (req, res, next) => {
+    const accountId = req.accountId
+
+    const account = await accountService.getAccountById(accountId)
+
+    res.json(account)
+
+})
+```
+
+2. Error should throw with the following format
+```
+const account = await db.account.findUniqueOrThrow({
+        where: {
+            id: id
+        }
+    }).catch((e) => {
+        throw new ApiError(HttpCode.NOT_FOUND, 'User Not Found!')
+    })
+
+    return account;
+```
