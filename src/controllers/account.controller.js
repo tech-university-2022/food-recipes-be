@@ -1,6 +1,6 @@
 const catchAsync = require('../utils/catchAsync.js');
 const accountService = require('../services/account.service.js');
-const loginService = require('../services/auth.service.js');
+const authService = require('../services/auth.service.js');
 
 const createAccount = catchAsync(async (req, res, next) => {
     const { name, email, password, avatarUrl } = req.body
@@ -10,15 +10,22 @@ const createAccount = catchAsync(async (req, res, next) => {
     res.json(account)
 })
 
-const login = catchAsync(async (req, res) => {
+const login = catchAsync(async (req, res, next) => {
 
     const { email, password } = req.body
 
-    const token = await loginService.login(email, password)
+    const token = await authService.login(email, password)
 
     res.json({
         "token": token
     })
 })
 
-module.exports = { createAccount, login }
+const resetPassword = catchAsync(async (req, res) => {
+    const { email } = req.body
+
+    accountService.resetPassword(email)
+
+})
+
+module.exports = { createAccount, login, resetPassword }
