@@ -21,5 +21,24 @@ const login = catchAsync(async (req, res) => {
         "token": token
     })
 })
+const update = catchAsync(async (req,res)=>{
+    const {newName,newAvatarUrl,newPassWord} = req.body
+    try{
+        if(newName!==null){
+            accountService.updateAccountName(newName)
+        }
+        if (newAvatarUrl!==null){
+            accountService.updateAccountAvatar(newAvatarUrl)
+        }
+        if(newPassWord!==null){
+            accountService.updateAccountPassword(newPassWord)
+        }
+    }catch(error){
+        res.status(500).send("Error occurs:" + error)
+    }
+   
+    
 
-export { createAccount, login }
+})
+
+export { createAccount, login,update}
