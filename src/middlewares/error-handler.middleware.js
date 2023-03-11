@@ -3,7 +3,6 @@ const generateBaseResponse = require("../utils/base-response.js");
 const ApiError = require('../utils/api-error.js');
 
 function errorHandler(err, req, res, next) {
-    console.log(err)
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
         res.status(401).json(generateBaseResponse(null, err.message))
     }
