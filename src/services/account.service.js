@@ -1,5 +1,5 @@
-import db from "../config/db.js"
-import authService from "./auth.service.js";
+const db = require("../config/db.js");
+const authService = require("./auth.service.js");
 
 
 async function getAccountByEmail(email) {
@@ -61,4 +61,5 @@ async function deleteAccount(email){
       })
 }
 
-export default { getAccountByEmail, createAccount, updateAccount,deleteAccount};
+
+module.exports = { getAccountByEmail, createAccount };

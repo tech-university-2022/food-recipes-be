@@ -1,7 +1,6 @@
-import catchAsync from '../utils/catchAsync.js'
-import accountService from '../services/account.service.js'
-import loginService from '../services/auth.service.js'
-import mapResponse from '../middlewares/response.middleware.js'
+const catchAsync = require('../utils/catchAsync.js');
+const accountService = require('../services/account.service.js');
+const loginService = require('../services/auth.service.js');
 
 const createAccount = catchAsync(async (req, res, next) => {
     const { name, email, password, avatarUrl } = req.body
@@ -38,4 +37,4 @@ const deleteAccount= catchAsync(async (req, res, next) => {
 })
 
 
-export { createAccount, login,update,deleteAccount}
+module.exports = { createAccount, login }

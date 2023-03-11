@@ -1,6 +1,6 @@
-import authService from '../services/auth.service.js';
-import ApiError from '../utils/api-error.js';
-import HttpCode from '../utils/http-code.js';
+const authService = require('../services/auth.service.js');
+const ApiError = require('../utils/api-error.js');
+const HttpCode = require('../utils/http-code.js');
 
 
 const auth = (req, res, next) => {
@@ -21,4 +21,4 @@ const auth = (req, res, next) => {
     }
 }
 
-export default auth;
+module.exports = auth;

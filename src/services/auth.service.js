@@ -1,8 +1,8 @@
-import { sha256 } from 'js-sha256'
-import accountService from './account.service.js';
-import jwt from 'jsonwebtoken'
-import ApiError from '../utils/api-error.js';
-import HttpCode from '../utils/http-code.js';
+const { sha256 } = require('js-sha256');
+const accountService = require('./account.service.js');
+const jwt = require('jsonwebtoken');
+const ApiError = require('../utils/api-error.js');
+const HttpCode = require('../utils/http-code.js');
 
 function hash(secret) {
     return sha256(secret)
@@ -39,5 +39,4 @@ async function login(email, password) {
 }
 
 
-
-export default { hash, decodeJWT, login }
+module.exports = { hash, decodeJWT, login }

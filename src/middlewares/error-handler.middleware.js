@@ -1,6 +1,6 @@
-import { Prisma } from "@prisma/client";
-import generateBaseResponse from "../utils/base-response.js";
-import ApiError from '../utils/api-error.js';
+const { Prisma } = require("@prisma/client");
+const generateBaseResponse = require("../utils/base-response.js");
+const ApiError = require('../utils/api-error.js');
 
 function errorHandler(err, req, res, next) {
     console.log(err)
@@ -18,4 +18,4 @@ function errorHandler(err, req, res, next) {
 
 }
 
-export default errorHandler;
+module.exports = errorHandler;
