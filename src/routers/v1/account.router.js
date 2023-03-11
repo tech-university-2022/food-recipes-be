@@ -1,5 +1,5 @@
 const express = require('express');
-const { createAccount, login } = require('../../controllers/account.controller.js');
+const { createAccount, login,update,deleteAccount } = require('../../controllers/account.controller.js');
 const mapResponse = require('../../middlewares/response.middleware.js')
 const auth = require('../../middlewares/auth.middleware.js');
 

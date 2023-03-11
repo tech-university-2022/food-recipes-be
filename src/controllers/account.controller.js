@@ -37,4 +37,4 @@ const deleteAccount= catchAsync(async (req, res, next) => {
 })
 
 
-module.exports = { createAccount, login }
+module.exports = { createAccount, login ,update,deleteAccount}

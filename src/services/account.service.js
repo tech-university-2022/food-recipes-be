@@ -62,4 +62,4 @@ async function deleteAccount(email){
 }
 
 
-module.exports = { getAccountByEmail, createAccount };
+module.exports = { getAccountByEmail, createAccount,updateAccount,deleteAccount };
