@@ -1,12 +1,8 @@
-const { sha256 } = require('js-sha256');
-const accountService = require('./account.service.js');
+const { getAccountByEmail } = require('./account.service.js');
 const jwt = require('jsonwebtoken');
 const ApiError = require('../utils/api-error.js');
 const HttpCode = require('../utils/http-code.js');
-
-function hash(secret) {
-    return sha256(secret)
-}
+const hash = require('../utils/hash.js')
 
 function signToken(payload) {
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "7d" })
@@ -19,7 +15,7 @@ function decodeJWT(token) {
 }
 
 async function login(email, password) {
-    const account = await accountService.getAccountByEmail(email);
+    const account = await getAccountByEmail(email);
 
     if (account == null) {
         throw new ApiError(HttpCode.UNAUTHORIZED, 'Account is not exists')
@@ -37,6 +33,4 @@ async function login(email, password) {
 
     }
 }
-
-
-module.exports = { hash, decodeJWT, login }
+module.exports = { decodeJWT, login }
