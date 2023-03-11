@@ -1,8 +1,8 @@
-const generateBaseResponse = require("../utils/base-response.js");
+const generateBaseResponse = require('../utils/base-response');
 
 function mapResponse(req, res, next) {
-    res.json(generateBaseResponse(res.body))
-    next()
+  res.json(generateBaseResponse(res.body));
+  next();
 }
 
-module.exports = mapResponse
+module.exports = mapResponse;

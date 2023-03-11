@@ -1,25 +1,24 @@
-const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
+const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
 
 const sendResetPasswordViaEmail = async (email, newPassword) => {
-    const client = new SESClient({
-        region: 'ap-southeast-1',
-        credentials: {
-            accessKeyId: process.env.AWS_ACCESS,
-            secretAccessKey: process.env.AWS_SECRET
-        }
-    })
+  const client = new SESClient({
+    region: 'ap-southeast-1',
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS,
+      secretAccessKey: process.env.AWS_SECRET,
+    },
+  });
 
-
-    const sendEmailCommand = new SendEmailCommand({
-        Message: {
-            Subject: {
-                Data: `[IMPORTANT] Password reset for Mi Recipe`,
-                Charset: 'UTF-8'
-            },
-            Body: {
-                Html: {
-                    Charset: 'UTF-8',
-                    Data: `
+  const sendEmailCommand = new SendEmailCommand({
+    Message: {
+      Subject: {
+        Data: '[IMPORTANT] Password reset for Mi Recipe',
+        Charset: 'UTF-8',
+      },
+      Body: {
+        Html: {
+          Charset: 'UTF-8',
+          Data: `
                     <body marginheight="0" topmargin="0" marginwidth="0" style="margin: 0px; background-color: #f2f3f8;" leftmargin="0">
                         <!--100% body table-->
                         <table cellspacing="0" border="0" cellpadding="0" width="100%" bgcolor="#f2f3f8"
@@ -83,22 +82,22 @@ const sendResetPasswordViaEmail = async (email, newPassword) => {
                         </table>
                         <!--/100% body table-->
                     </body>
-                    `
-                }
-            }
+                    `,
         },
-        Destination: {
-            ToAddresses: [email],
-        },
-        Source: "thinhlh0812@gmail.com"
-    });
+      },
+    },
+    Destination: {
+      ToAddresses: [email],
+    },
+    Source: 'thinhlh0812@gmail.com',
+  });
 
-    client
-        .send(sendEmailCommand)
-        .then(() => {
-            console.log(`Email sent to ${email}`)
-        })
-        .catch((e) => { console.log(e) });
-}
+  client
+    .send(sendEmailCommand)
+    .then(() => {
+      console.log(`Email sent to ${email}`);
+    })
+    .catch((e) => { console.log(e); });
+};
 
-module.exports = sendResetPasswordViaEmail
+module.exports = sendResetPasswordViaEmail;
