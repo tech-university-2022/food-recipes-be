@@ -32,48 +32,28 @@ const createAccount = async (name, email, password, avatarUrl) => {
 
     return extractedAccount
 }
-async function updateAccountName(email,newName){
-   prisma.account.update({
+async function updateAccount(email,newName,newAvatarUrl){
+   const newInfor = prisma.account.upsert({
         where: {
             email: email
         },
-        data: {
+        update: {
             name: newName,
+            avatarUrl: newAvatarUrl,
             metadata: {
                 enabled: true
             }
             
         }
     })
-
+    return newInfor
 }
-async function updateAccountAvatar(email,newAvatarUrl){
-    prisma.account.update({
-         where: {
-             email: email
-         },
-         data: {
-             avatarUrl: newAvatarUrl,
-             metadata: {
-                 enabled: true
-             }
-         }
-     })
- 
- }
- async function updateAccountPassword(email,newPassword){
-    prisma.account.update({
-         where: {
-             email: email
-         },
-         data: {
-             password:  authService.hash(newPassword),
-             metadata: {
-                 enabled: true
-             }
-         }
-     })
- }
+async function deleteAccount(email){
+    await prisma.user.delete({
+        where: {
+          email: email,
+        },
+      })
+}
 
-
-export default { getAccountByEmail, createAccount, updateAccountName,updateAccountAvatar,updateAccountPassword};
+export default { getAccountByEmail, createAccount, updateAccount,deleteAccount};

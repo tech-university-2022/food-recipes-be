@@ -22,23 +22,20 @@ const login = catchAsync(async (req, res) => {
     })
 })
 const update = catchAsync(async (req,res)=>{
-    const {newName,newAvatarUrl,newPassWord} = req.body
+    const {email,newName,newAvatarUrl} = req.body
     try{
-        if(newName!==null){
-            accountService.updateAccountName(newName)
-        }
-        if (newAvatarUrl!==null){
-            accountService.updateAccountAvatar(newAvatarUrl)
-        }
-        if(newPassWord!==null){
-            accountService.updateAccountPassword(newPassWord)
-        }
+        const updatedInfor = await accountService.updateAccount(email,newName,newAvatarUrl)
+        res=>res.json(updatedInfor)
     }catch(error){
         res.status(500).send("Error occurs:" + error)
     }
-   
-    
 
 })
+const deleteAccount= catchAsync(async (req, res, next) => {
+    const {email} = req.body
+    const account = await accountService.deleteAccount(email)
+    res.json(account)
+})
 
-export { createAccount, login,update}
+
+export { createAccount, login,update,deleteAccount}
