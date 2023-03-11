@@ -58,7 +58,7 @@ const sendResetPasswordViaEmail = async (email, newPassword) => {
                                                                 We cannot simply send you your old password for your account with email: ${email}. Hence, we send you your new password, use this password to access your account. You can change your password for further security.
                                                             </p>
                                                             <a href="javascript:void(0);"
-                                                                style="background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#1e1e2d;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">${newPassword}</a>
+                                                                style="background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#1e1e2d; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">${newPassword}</a>
                                                         </td>
                                                     </tr>
                                                     <tr>
