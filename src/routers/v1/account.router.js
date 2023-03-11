@@ -12,11 +12,11 @@ router.get('/protected', auth, (req, res, next) => {
     res.json({ "accountId": req.accountId })
 })
 
-router.patch('/update',auth, update,(req,res,next)=>{
-    const updatedInfor = update()
+router.patch('/update/:email', accountController.update,(req,res,next)=>{
+    const updatedInfor = accountController.update()
     res.send(updatedInfor)
 })
-router.delete('/delete/accountId',auth,deleteAccount)
+router.delete('/delete/:email',accountController.deleteAccount)
 
 router.post('/password/reset', accountController.resetPassword)
 

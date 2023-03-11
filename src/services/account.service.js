@@ -35,24 +35,35 @@ const createAccount = async (name, email, password, avatarUrl) => {
 
     return extractedAccount
 }
-async function updateAccount(email,newName,newAvatarUrl){
-   const newInfor = prisma.account.update({
+async function updateAccount(email,name,avatarUrl){
+    const account = await db.account.findUnique({
+        where: {
+            email: email
+        }
+    })
+    if (!account) {
+        throw new ApiError(HttpCode.SUCCESS, 'Account not found!')}
+    else{
+        const newInfor = db.account.update({
         where: {
             email: email
         },
         data: {
-            name: newName,
-            avatarUrl: newAvatarUrl,
+            name: name,
+            avatarUrl: avatarUrl,
             metadata: {
                 enabled: true
             }
             
         }
-    })
+    }
+    )
     return newInfor
 }
+    
+}
 async function deleteAccount(email){
-    await prisma.user.update({
+    await db.account.update({
         where: {
           email: email,
         },
@@ -64,10 +75,6 @@ async function deleteAccount(email){
       })
 }
 
-<<<<<<< HEAD
-
-module.exports = { getAccountByEmail, createAccount,updateAccount,deleteAccount };
-=======
 const changePassword = async (email, password) => {
     const account = await db.account.findUnique({
         where: {
@@ -105,6 +112,8 @@ module.exports = {
     getAccountByEmail,
     createAccount,
     resetPassword,
-    changePassword
+    changePassword,
+    updateAccount,
+    deleteAccount
 };
 
