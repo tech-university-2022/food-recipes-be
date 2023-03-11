@@ -95,6 +95,9 @@ const sendResetPasswordViaEmail = async (email, newPassword) => {
 
     client
         .send(sendEmailCommand)
+        .then(() => {
+            console.log(`Email sent to ${email}`)
+        })
         .catch((e) => { console.log(e) });
 }
 

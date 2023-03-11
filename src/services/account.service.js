@@ -46,7 +46,8 @@ const changePassword = async (email, password) => {
     if (!account) {
         throw new ApiError(HttpCode.SUCCESS, 'Account not found!')
     } else {
-        console.log(newPassword)
+        const newPassword = hash(password)
+        
         await db.account.update({
             where: {
                 email: email,
@@ -64,7 +65,7 @@ const resetPassword = async (email) => {
 
     const newPassword = getRandomString(12)
     await changePassword(email, newPassword)
-
+    
     await sendResetPasswordViaEmail(email, newPassword)
     return true
 }
