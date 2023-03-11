@@ -33,5 +33,4 @@ async function login(email, password) {
 
     }
 }
-
 module.exports = { decodeJWT, login }

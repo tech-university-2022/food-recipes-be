@@ -20,6 +20,29 @@ const login = catchAsync(async (req, res, next) => {
         "token": token
     })
 })
+const update = catchAsync(async (req,res)=>{
+    const {name,avatarUrl} = req.body
+    try{
+        await accountService.updateAccount(req.params.email,name,avatarUrl)
+        res.status(200).send('Update successfully')
+    }catch(error){
+        res.status(500).send("Error occurs:" + error)
+    }
+
+
+})
+const deleteAccount= catchAsync(async (req, res, next) => {
+    try{
+       console.log(req.params.email)
+    await accountService.deleteAccount(req.params.email)
+    res.status(200).send("Deleted account")
+}
+    catch(error){
+        next(error)
+      
+    }
+})
+
 
 const resetPassword = catchAsync(async (req, res) => {
     const { email } = req.body
@@ -28,4 +51,4 @@ const resetPassword = catchAsync(async (req, res) => {
 
 })
 
-module.exports = { createAccount, login, resetPassword }
+module.exports = { createAccount, login, resetPassword,update,deleteAccount}
