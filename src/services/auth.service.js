@@ -1,4 +1,4 @@
-const { getAccountByEmail } = require('./account.service.js');
+const accountService = require('./account.service.js');
 const jwt = require('jsonwebtoken');
 const ApiError = require('../utils/api-error.js');
 const HttpCode = require('../utils/http-code.js');
@@ -15,22 +15,29 @@ function decodeJWT(token) {
 }
 
 async function login(email, password) {
-    const account = await getAccountByEmail(email);
+    const account = await accountService.getAccountByEmailWithThrow(email, true);
 
-    if (account == null) {
-        throw new ApiError(HttpCode.UNAUTHORIZED, 'Account is not exists')
-    } else {
-        if (hash(password) === account.password) {
+    if (hash(password) === account.password) {
+
+        if (checkAccountEnabled(account)) {
             const token = signToken({
                 "id": account.id,
                 "type": "Bearer"
             })
-
             return token
-        } else {
-            throw new ApiError(HttpCode.UNAUTHORIZED, 'Invalid password')
         }
 
+    } else {
+        throw new ApiError(HttpCode.UNAUTHORIZED, 'Invalid password!')
     }
 }
-module.exports = { decodeJWT, login }
+
+const checkAccountEnabled = (account) => {
+    if (account.metadata['enabled'] === true) {
+        return true
+    } else {
+        throw new ApiError(HttpCode.BAD_REQUEST, 'Your asccount is disabled!')
+    }
+}
+
+module.exports = { decodeJWT, login, checkAccountEnabled }
