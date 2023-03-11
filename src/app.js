@@ -1,8 +1,8 @@
-import cors from 'cors';
-import express from 'express';
-import router from './routers/v1/routers.js';
-import errorHandler from './middlewares/error-handler.middleware.js';
-import mapResponse from './middlewares/response.middleware.js';
+const cors = require('cors');
+const express = require('express');
+const router = require('./routers/v1/routers.js');
+const errorHandler = require('./middlewares/error-handler.middleware.js');
+const mapResponse = require('./middlewares/response.middleware.js');
 
 const app = express();
 
