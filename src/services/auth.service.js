@@ -1,4 +1,5 @@
 const { getAccountByEmail } = require('./account.service.js');
+const accountService = require('./account.service.js');
 const jwt = require('jsonwebtoken');
 const ApiError = require('../utils/api-error.js');
 const HttpCode = require('../utils/http-code.js');

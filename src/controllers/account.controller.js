@@ -26,6 +26,9 @@ const resetPassword = catchAsync(async (req, res) => {
 
     accountService.resetPassword(email)
 
+    res.json({
+        "success": true
+    })
 })
 
 module.exports = { createAccount, login, resetPassword }
