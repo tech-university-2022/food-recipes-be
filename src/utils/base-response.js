@@ -14,4 +14,4 @@ function generateBaseResponse(data, err) {
     }
 }
 
-export default generateBaseResponse
+module.exports =  generateBaseResponse

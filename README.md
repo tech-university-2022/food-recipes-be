@@ -36,3 +36,9 @@ router.get('/protected', auth, (req, res, next) => {
     res.json('protected')
 })
 ```
+
+## Access user detail after authenticated
+> Inside the request, there will be accountId field. If user exists, this should return the account ID of logged user
+```
+req.accountId
+```
