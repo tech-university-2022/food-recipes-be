@@ -19,6 +19,29 @@ const getRecipeByAccount = async (req, res) => {
   res.json(generateBaseResponse(recipe));
 };
 
+const handleCreateRecipe = async (req, res) => {
+  // middleware joi check
+  // call to service to save to db
+  // return message
+};
+
+const handleUpdateRecipeMetadata = async (req, res) => {
+  // middleware joi check
+  // call to service
+  // return message
+};
+
+const handleUpdateRecipeIngredient = async (req, res) => {
+  // middleware joi check
+  // call to service
+  // return message
+};
+
+const handleDeleteRecipe = async (req, res) => {
+  // middleware joi check
+  // call to service
+  // return message
+};
 module.exports = {
   getRecommended,
   getRecipeById,
