@@ -1,12 +1,14 @@
 const express = require('express');
 const accountController = require('../../controllers/account.controller');
 const auth = require('../../middlewares/auth.middleware');
+const { generateValidationMiddleware } = require('../../middlewares/validation.middleware');
+const accountSchema = require('../../validations/account.schema');
 
 const router = express.Router();
 
 // TODO: add joi middleware to check on inputs
 
-router.post('/login', accountController.login);
+router.post('/login', generateValidationMiddleware(accountSchema, 'body'), accountController.login);
 router.get('/protected', auth, (req, res) => {
   res.json({ accountId: req.accountId });
 });

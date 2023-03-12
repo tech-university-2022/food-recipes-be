@@ -24,7 +24,7 @@ const createAccount = catchAsync(async (req, res) => {
 });
 
 const viewMyAccount = catchAsync(async (req, res) => {
-  const { accountId } = req;
+  const { accountId } = req.accountId;
 
   const account = await accountService.getAccountByIdWithThrow(accountId);
 
