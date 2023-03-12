@@ -19,31 +19,47 @@ const getRecipeByAccount = async (req, res) => {
   res.json(generateBaseResponse(recipe));
 };
 
-const handleCreateRecipe = async (req, res) => {
-  // middleware joi check
-  // call to service to save to db
-  // return message
+const handleCreateRecipe = async (req, res, next) => {
+  try {
+    const recipe = await recipeService.createRecipe(req.body);
+    res.json(generateBaseResponse(recipe));
+  } catch (error) {
+    next(error);
+  }
 };
 
-const handleUpdateRecipeMetadata = async (req, res) => {
-  // middleware joi check
-  // call to service
-  // return message
+const handleUpdateRecipeMetadata = async (req, res, next) => {
+  try {
+    const recipe = await recipeService.updateRecipeMetadata(req.body);
+    res.json(generateBaseResponse(recipe));
+  } catch (error) {
+    next(error);
+  }
 };
 
-const handleUpdateRecipeIngredient = async (req, res) => {
-  // middleware joi check
-  // call to service
-  // return message
+const handleUpdateRecipeIngredient = async (req, res, next) => {
+  try {
+    const recipe = await recipeService.updateRecipeIngredients(req.body);
+    res.json(generateBaseResponse(recipe));
+  } catch (error) {
+    next(error);
+  }
 };
 
-const handleDeleteRecipe = async (req, res) => {
-  // middleware joi check
-  // call to service
-  // return message
+const handleDeleteRecipe = async (req, res, next) => {
+  try {
+    const recipe = await recipeService.deleteRecipe(req.body);
+    res.json(generateBaseResponse(recipe));
+  } catch (error) {
+    next(error);
+  }
 };
 module.exports = {
   getRecommended,
   getRecipeById,
   getRecipeByAccount,
+  handleCreateRecipe,
+  handleUpdateRecipeMetadata,
+  handleUpdateRecipeIngredient,
+  handleDeleteRecipe,
 };
