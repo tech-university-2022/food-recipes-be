@@ -1,25 +1,53 @@
 // reloadSearchMaps is used to reload inverted index maps when the BE starts
 const reloadSearchMaps = () => {
-
+  // get all recipes
+  // add recipe to 2 maps
 };
 
+// **** High priority ****
+// fix get result bug
+// fix data race bug
+// implement reloadSearchMaps
+// **** High priority ****
+
+// **** Low priority ****
+// O(1)
+// O(n)
+// BST -> Red and Black Tree O(logN)
+// **** Low priority ****
+
+// semaphore, binary semaphore
+// atomic operation
+// compareAndSwap
+// critical resources - Mutex, semaphore
+// 'flower' -> [idRecipe1, idRecipe2...]
 const ingredientToIds = {};
+
+// idRecipe1 -> objRecipe
 const IdToRecipes = {};
 
 const addRecipe = (recipe) => {
-  IdToRecipes.set(recipe.id, recipe);
+  IdToRecipes[recipe.id] = recipe;
 };
 
 const deleteRecipe = (id) => {
-  IdToRecipes.delete(id);
+  delete IdToRecipes[id];
 };
 
+// add new recipe -> recipeId, ingredients recipes
+// update ingredient recipe ->
+// a b c d
+// b c e f
+// e f
+// a
+// race condition?
+// mutex
 const addIngredientsToRecipe = (recipeId, ingredients) => {
   ingredients.forEach((ingredient) => {
     if (!ingredientToIds[ingredient]) {
       ingredientToIds[ingredient] = [recipeId];
     } else {
-      ingredientToIds[ingredient] = [...ingredientToIds[ingredient], recipeId];
+      ingredientToIds[ingredient].push(recipeId);
     }
   });
 };
