@@ -5,7 +5,7 @@ const reloadSearchMaps = () => {
 };
 
 // **** High priority ****
-// fix get result bug
+// fix get result bug [x]
 // fix data race bug
 // implement reloadSearchMaps
 // **** High priority ****
@@ -46,7 +46,8 @@ const addIngredientsToRecipe = (recipeId, ingredients) => {
   ingredients.forEach((ingredient) => {
     if (!ingredientToIds[ingredient]) {
       ingredientToIds[ingredient] = [recipeId];
-    } else {
+    } else if (!ingredientToIds[ingredient].includes(recipeId)) {
+      // Avoid adding duplicated recipes
       ingredientToIds[ingredient].push(recipeId);
     }
   });
@@ -55,38 +56,36 @@ const addIngredientsToRecipe = (recipeId, ingredients) => {
 const deleteIngredientsFromRecipe = (recipeId, ingredients) => {
   ingredients.forEach((ingredient) => {
     if (ingredientToIds[ingredient]) {
-      const curIds = ingredientToIds[ingredient];
+      const currentRecipeIds = ingredientToIds[ingredient];
       // remove recipeId from ingredient map (currently O(n), can be optimized to O(logN))
       // we can use BST (Red and Black tree) here for O(logN) operation
-      let i = 0;
-      while (i < curIds.length) {
-        if (curIds[i] === recipeId) {
-          curIds.splice(i, 1);
-        } else {
-          i += 1;
-        }
+
+      const recipeIndex = currentRecipeIds.indexOf(recipeId);
+
+      if (recipeIndex >= 0) {
+        currentRecipeIds.splice(recipeIndex, 1);
       }
-      ingredientToIds[ingredient] = curIds;
+
+      ingredientToIds[ingredient] = currentRecipeIds;
     }
   });
 };
 
-// TODO: resolve bug behavior
+const intersect = (...arrays) => (
+  arrays.length === 0 ? []
+    : arrays.reduce((a, b) => a.filter((c) => b.includes(c)))
+);
+
 const searchByIngredients = (ingredients) => {
-  const recipes = [];
-  const idMap = {};
-  for (let i = 0; i < ingredients.length; i += 1) {
-    if (!ingredientToIds[ingredients[i]]) {
-      return [];
-    }
-    const curIds = ingredientToIds[ingredients[i]];
-    curIds.forEach((id) => {
-      if (!idMap[id]) {
-        recipes.push(IdToRecipes[id]);
-        idMap[id] = true;
-      }
-    });
-  }
+  // Map each ingredients to list of recipeIds, then intersect them and map to recipes
+  const recipes = intersect(
+    ingredients
+      .map((ingredient) => {
+        const recipeIds = ingredientToIds[ingredient];
+        return recipeIds || [];
+      }),
+  ).map((recipeId) => IdToRecipes[recipeId]);
+
   return recipes;
 };
 
