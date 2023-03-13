@@ -1,9 +1,9 @@
 const db = require('../config/db');
-const ApiError = require('../utils/api-error');
-const HttpCode = require('../utils/http-code');
 const getRandomString = require('../utils/string');
 const sendResetPasswordViaEmail = require('../external/ses');
 const hash = require('../utils/hash');
+const NotFoundError = require('../errors/notfound.error');
+const InvalidFieldError = require('../errors/invalid.error');
 
 async function getAccountByEmailWithThrow(email, selectPassword) {
   const account = await db.account.findUniqueOrThrow({
@@ -19,7 +19,7 @@ async function getAccountByEmailWithThrow(email, selectPassword) {
       password: selectPassword === true,
     },
   }).catch(() => {
-    throw new ApiError(HttpCode.BAD_REQUEST, 'Account with this email not found!');
+    throw new NotFoundError('Account with this email not found!');
   });
 
   return account;
@@ -40,7 +40,7 @@ async function getAccountByIdWithThrow(id, selectPassword) {
     },
 
   }).catch(() => {
-    throw new ApiError(HttpCode.NOT_FOUND, 'Account Not Found!');
+    throw new NotFoundError('Account Not Found!');
   });
 
   return account;
@@ -131,7 +131,7 @@ const checkAndChangePassword = async (id, oldPassword, newPassword) => {
 
     return true;
   }
-  throw new ApiError(HttpCode.BAD_REQUEST, 'Given old password does not match!');
+  throw new InvalidFieldError('Given old password does not match!');
 };
 
 const resetPassword = async (email) => {

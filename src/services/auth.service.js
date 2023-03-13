@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const accountService = require('./account.service');
-const ApiError = require('../utils/api-error');
-const HttpCode = require('../utils/http-code');
 const hash = require('../utils/hash');
+const InvalidFieldError = require('../errors/invalid.error');
+const UnauthorizedError = require('../errors/unauthorized.error');
 
 function signToken(payload) {
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
@@ -18,7 +18,7 @@ const checkAccountEnabled = (account) => {
   if (account.metadata.enabled === true) {
     return true;
   }
-  throw new ApiError(HttpCode.BAD_REQUEST, 'Your asccount is disabled!');
+  throw new InvalidFieldError('Your asccount is disabled!');
 };
 
 async function login(email, password) {
@@ -32,7 +32,7 @@ async function login(email, password) {
     });
     return token;
   }
-  throw new ApiError(HttpCode.UNAUTHORIZED, 'Invalid password!');
+  throw new UnauthorizedError('Invalid password!');
 }
 
 module.exports = { decodeJWT, login, checkAccountEnabled };

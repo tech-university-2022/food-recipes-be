@@ -1,6 +1,5 @@
 const db = require('../config/db');
-const ApiError = require('../utils/api-error');
-const HttpCode = require('../utils/http-code');
+const NotFoundError = require('../errors/notfound.error');
 
 const getRecipes = async () => db.recipe.findMany({});
 
@@ -13,7 +12,7 @@ const getRecipeById = async (id) => {
       },
     });
   } catch (e) {
-    throw new ApiError(HttpCode.BAD_REQUEST, 'Recipe not found');
+    throw new NotFoundError('Recipe not found!');
   }
 };
 
