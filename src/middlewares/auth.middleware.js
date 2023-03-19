@@ -1,13 +1,13 @@
 const authService = require('../services/auth.service');
 const accountService = require('../services/account.service');
-const ApiError = require('../utils/api-error');
-const HttpCode = require('../utils/http-code');
+const UnauthorizedError = require('../errors/unauthorized.error');
+const InvalidFieldError = require('../errors/invalid.error');
 
 const auth = async (req, res, next) => {
   let token = req.headers.authorization;
 
   if (token == null) {
-    next(new ApiError(HttpCode.UNAUTHORIZED, 'Not Authenticated!'));
+    next(new UnauthorizedError('Not Authenticated!'));
   } else {
     token = token.replace('Bearer ', '');
     try {
@@ -21,10 +21,7 @@ const auth = async (req, res, next) => {
 
       next();
     } catch (err) {
-      if (err instanceof ApiError) {
-        next(err);
-      }
-      next(new ApiError(HttpCode.BAD_REQUEST, 'Invalid token!'));
+      next(new InvalidFieldError('Invalid token!'));
     }
   }
 };

@@ -1,10 +1,14 @@
 const express = require('express');
 const accountController = require('../../controllers/account.controller');
 const auth = require('../../middlewares/auth.middleware');
+const { generateValidationMiddleware } = require('../../middlewares/validation.middleware');
+const accountSchema = require('../../validations/account.schema');
 
 const router = express.Router();
 
-router.post('/login', accountController.login);
+// TODO: add joi middleware to check on inputs
+
+router.post('/login', generateValidationMiddleware(accountSchema, 'body'), accountController.login);
 router.get('/protected', auth, (req, res) => {
   res.json({ accountId: req.accountId });
 });
@@ -17,4 +21,5 @@ router.delete('/', auth, accountController.deleteAccount);
 router.post('/password', auth, accountController.changePassword);
 router.post('/password/reset', accountController.resetPassword);
 
+// where is update ?
 module.exports = { accountRouter: router };

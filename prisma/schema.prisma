@@ -23,9 +23,9 @@ model Account {
 }
 
 model Recipe {
-  id         String @id @default(uuid())
-  name       String
-  desciption String
+  id          String @id @default(uuid())
+  name        String
+  description String
 
   author   Account @relation(fields: [authorId], references: [id])
   authorId String  @map("author_id")
@@ -40,8 +40,9 @@ model Recipe {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  metadata Json
+  metadata Json?
 
+  status     Boolean
   categories RecipeCategory[]
   MenuRecipe MenuRecipe[]
 }
