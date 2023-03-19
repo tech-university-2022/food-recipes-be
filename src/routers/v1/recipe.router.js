@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const recipeController = require('../../controllers/recipe.controller');
-const generateValidationMiddleware = require('../../middlewares/validation.middleware');
+const { generateValidationMiddleware } = require('../../middlewares/validation.middleware');
 const {
   bodySchemaForCreateRecipe, bodySchemaForUpdateRecipeMetadata,
   paramSchemaForRecipeById, paramSchemaForRecipeByAuthorId, bodySchemaForUpdateRecipeIngredients,
@@ -14,9 +14,9 @@ recipeRouter.get('/account/:accountId', generateValidationMiddleware(paramSchema
 
 recipeRouter.post('/', generateValidationMiddleware(bodySchemaForCreateRecipe, 'body'), recipeController.handleCreateRecipe);
 
-recipeRouter.post('/', generateValidationMiddleware(paramSchemaForRecipeById, 'params'), generateValidationMiddleware(bodySchemaForUpdateRecipeIngredients, 'body'), recipeController.handleUpdateRecipeIngredient);
-recipeRouter.put('/', generateValidationMiddleware(bodySchemaForUpdateRecipeMetadata, 'body'), recipeController.handleUpdateRecipeMetadata);
+recipeRouter.put('/ingredients/:id', generateValidationMiddleware(paramSchemaForRecipeById, 'params'), generateValidationMiddleware(bodySchemaForUpdateRecipeIngredients, 'body'), recipeController.handleUpdateRecipeIngredient);
+recipeRouter.put('/metadata/:id', generateValidationMiddleware(paramSchemaForRecipeById, 'params'), generateValidationMiddleware(bodySchemaForUpdateRecipeMetadata, 'body'), recipeController.handleUpdateRecipeMetadata);
 
-recipeRouter.delete('/', generateValidationMiddleware(paramSchemaForRecipeById, 'params'), recipeController.handleDeleteRecipe);
+recipeRouter.delete('/:id', generateValidationMiddleware(paramSchemaForRecipeById, 'params'), recipeController.handleDeleteRecipe);
 
 module.exports = recipeRouter;

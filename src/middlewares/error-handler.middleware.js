@@ -9,6 +9,7 @@ const UnauthorizedError = require('../errors/unauthorized.error');
 
 // eslint-disable-next-line no-unused-vars
 function errorHandler(err, _req, res, _next) {
+  console.log(err);
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     res.status(HttpCode.BAD_REQUEST).json(generateBaseResponse(null, err.message.split('\n').splice(-1)[0]));
   } else {
