@@ -8,7 +8,7 @@ const router = express.Router();
 
 // TODO: add joi middleware to check on inputs
 
-router.post('/login', generateValidationMiddleware(accountSchema, 'body'), accountController.login);
+router.post('/login', generateValidationMiddleware(accountSchema.bodyLogin, 'body'), accountController.login);
 router.get('/protected', auth, (req, res) => {
   res.json({ accountId: req.accountId });
 });

@@ -26,11 +26,13 @@ async function login(email, password) {
 
   if (hash(password) === account.password) {
     checkAccountEnabled(account);
+
+    const { password: passwordInAccount, ...accountWithoutPassword } = account;
     const token = signToken({
       id: account.id,
       type: 'Bearer',
     });
-    return token;
+    return { token, account: accountWithoutPassword };
   }
   throw new UnauthorizedError('Invalid password!');
 }
