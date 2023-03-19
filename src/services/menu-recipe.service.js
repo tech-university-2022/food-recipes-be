@@ -3,23 +3,35 @@ const db = require('../config/db');
 const addRecipeToMenu = async (recipeId, menuId) => {
   const resp = await db.menuRecipe.upsert({
     where: {
-      menu_id: menuId,
-      recipe_id: recipeId,
+      menuId_recipeId: {
+        menuId,
+        recipeId,
+      },
     },
     update: {},
     create: {
-      menu_id: menuId,
-      recipe_id: recipeId,
+      menu: {
+        connect: {
+          id: menuId,
+        },
+      },
+      recipe: {
+        connect: {
+          id: recipeId,
+        },
+      },
     },
   });
   return resp;
 };
 
-const deleteReipeFromMenu = async (recipeId, menuId) => {
+const deleteRecipeFromMenu = async (recipeId, menuId) => {
   const resp = await db.menuRecipe.delete({
     where: {
-      menu_id: menuId,
-      recipe_id: recipeId,
+      menuId_recipeId: {
+        menuId,
+        recipeId,
+      },
     },
   });
   return resp;
@@ -27,5 +39,5 @@ const deleteReipeFromMenu = async (recipeId, menuId) => {
 
 module.exports = {
   addRecipeToMenu,
-  deleteReipeFromMenu,
+  deleteRecipeFromMenu,
 };

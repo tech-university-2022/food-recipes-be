@@ -27,16 +27,17 @@ const handleGetMenuByUserId = async (req, res, next) => {
 const handleGetMenuById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const menus = await menuService.getMenuById(id);
-    res.json(menus);
+    const menu = await menuService.getMenuById(id);
+    res.json(menu);
   } catch (error) {
     next(error);
   }
 };
 
+// TODO: need to check if this menu belong to this user or not
 const handleAddRecipeToMenu = async (req, res, next) => {
   try {
-    const { recipeId, menuId } = req.params;
+    const { recipeId, menuId } = req.body;
     const resp = await menuRecipeService.addRecipeToMenu(recipeId, menuId);
     res.json(resp);
   } catch (error) {
@@ -44,10 +45,11 @@ const handleAddRecipeToMenu = async (req, res, next) => {
   }
 };
 
+// TODO: need to check if this menu belong to this user or not
 const handleDeleteRecipeFromMenu = async (req, res, next) => {
   try {
-    const { recipeId, menuId } = req.params;
-    const resp = await menuRecipeService.deleteReipeFromMenu(recipeId, menuId);
+    const { recipeId, menuId } = req.body;
+    const resp = await menuRecipeService.deleteRecipeFromMenu(recipeId, menuId);
     res.json(resp);
   } catch (error) {
     next(error);

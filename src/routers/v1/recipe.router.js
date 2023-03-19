@@ -4,7 +4,7 @@ const { generateValidationMiddleware } = require('../../middlewares/validation.m
 const {
   bodySchemaForCreateRecipe, bodySchemaForUpdateRecipeMetadata,
   paramSchemaForRecipeById, paramSchemaForRecipeByAuthorId, bodySchemaForUpdateRecipeIngredients,
-} = require('../../validations/recipe-schema');
+} = require('../../validations/recipe.schema');
 
 const recipeRouter = Router();
 

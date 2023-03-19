@@ -6,7 +6,7 @@ const getRecipes = async () => db.recipe.findMany({ where: { status: true } });
 // get comments here or using FE?
 const getRecipeById = async (id) => {
   try {
-    return await db.recipe.findUniqueOrThrow({
+    return await db.recipe.findFirstOrThrow({
       where: {
         id,
         status: true,
