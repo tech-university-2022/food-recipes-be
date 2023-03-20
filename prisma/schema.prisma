@@ -45,6 +45,7 @@ model Recipe {
   status     Boolean
   categories RecipeCategory[]
   MenuRecipe MenuRecipe[]
+  Comment    Comment[]
 }
 
 model Category {
@@ -91,6 +92,8 @@ model Comment {
   id        String   @id @default(uuid())
   account   Account  @relation(fields: [accountId], references: [id])
   accountId String   @map("account_id")
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+  recipeId  String   @map("recipe_id")
   content   String
   createdAt DateTime @default(now()) @map("created_at")
 }

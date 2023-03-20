@@ -2,11 +2,12 @@ const commentService = require('../services/comment.service');
 
 const handleCreateComment = async (req, res, next) => {
   try {
-    const { content, accountId, recipeId } = req.body;
-    const comment = await commentService.createMenu({
+    const { recipeId } = req.params;
+    const { content, accountId } = req.body;
+    const comment = await commentService.createComment({
       content,
-      account_id: accountId,
-      recipe_id: recipeId,
+      accountId,
+      recipeId,
     });
     res.json(comment);
   } catch (error) {
@@ -26,8 +27,9 @@ const handleGetCommentByRecipe = async (req, res, next) => {
 
 const handleDeleteComment = async (req, res, next) => {
   try {
-    const { content, accountId, recipeId } = req.body;
-    const comment = await commentService.deleteComment(content, accountId, recipeId);
+    const { accountId } = req.body;
+    const { id } = req.params;
+    const comment = await commentService.deleteComment(accountId, id);
     res.json(comment);
   } catch (error) {
     next(error);
