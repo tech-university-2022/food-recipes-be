@@ -6,11 +6,12 @@ const generateBaseResponse = require('../utils/base-response');
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
 
-  const token = await authService.login(email, password);
+  const { token, account } = await authService.login(email, password);
 
-  res.json({
+  res.json(generateBaseResponse({
     token,
-  });
+    account,
+  }));
 });
 
 const createAccount = catchAsync(async (req, res) => {
