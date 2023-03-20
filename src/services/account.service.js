@@ -1,119 +1,156 @@
-const db = require("../config/db.js");
-const ApiError = require("../utils/api-error.js");
-const HttpCode = require("../utils/http-code.js");
-const getRandomString = require("./../utils/string.js");
-const sendResetPasswordViaEmail = require("../external/ses.js");
-const hash = require('../utils/hash.js');
+const db = require('../config/db');
+const getRandomString = require('../utils/string');
+const sendResetPasswordViaEmail = require('../external/ses');
+const hash = require('../utils/hash');
+const NotFoundError = require('../errors/notfound.error');
+const InvalidFieldError = require('../errors/invalid.error');
 
-async function getAccountByEmail(email) {
+async function getAccountByEmailWithThrow(email, selectPassword) {
+  const account = await db.account.findUniqueOrThrow({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+      avatarUrl: true,
+      email: true,
+      name: true,
+      metadata: true,
+      password: selectPassword === true,
+    },
+  }).catch(() => {
+    throw new NotFoundError('Account with this email not found!');
+  });
 
-    const account = await db.account.findUnique({
-        where: {
-            email: email
-        }
-    })
+  return account;
+}
 
-    return account;
+async function getAccountByIdWithThrow(id, selectPassword) {
+  const account = await db.account.findUniqueOrThrow({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      avatarUrl: true,
+      name: true,
+      email: true,
+      metadata: true,
+      password: selectPassword === true,
+    },
+
+  }).catch(() => {
+    throw new NotFoundError('Account Not Found!');
+  });
+
+  return account;
 }
 
 const createAccount = async (name, email, password, avatarUrl) => {
+  const account = await db.account.create({
+    data: {
+      name,
+      email,
+      password: hash(password),
+      avatarUrl,
+      metadata: {
+        enabled: true,
+      },
+    },
+  });
 
-    const account = await db.account.create({
-        data: {
-            name: name,
-            email: email,
-            password: hash(password),
-            avatarUrl: avatarUrl,
-            metadata: {
-                enabled: true
-            }
-        }
-    })
+  const { password: _, ...extractedAccount } = account;
 
-
-    let { password: _, ...extractedAccount } = account;
-
-    return extractedAccount
-}
-async function updateAccount(email,name,avatarUrl){
-    const account = await db.account.findUnique({
-        where: {
-            email: email
-        }
-    })
-    if (!account) {
-        throw new ApiError(HttpCode.SUCCESS, 'Account not found!')}
-    else{
-        const newInfor = db.account.update({
-        where: {
-            email: email
-        },
-        data: {
-            name: name,
-            avatarUrl: avatarUrl,
-            metadata: {
-                enabled: true
-            }
-            
-        }
-    }
-    )
-    return newInfor
-}
-    
-}
-async function deleteAccount(email){
-    await db.account.update({
-        where: {
-          email: email,
-        },
-        data:{
-            metadata: {
-                enabled: false
-            }
-        }
-      })
-}
-
-const changePassword = async (email, password) => {
-    const account = await db.account.findUnique({
-        where: {
-            email: email
-        }
-    })
-
-    if (!account) {
-        throw new ApiError(HttpCode.SUCCESS, 'Account not found!')
-    } else {
-        const newPassword = hash(password)
-        await db.account.update({
-            where: {
-                email: email,
-            },
-            data: {
-                password: newPassword
-            }
-        })
-
-        return true
-    }
-}
-
-const resetPassword = async (email) => {
-
-    const newPassword = getRandomString(12)
-    await changePassword(email, newPassword)
-
-    await sendResetPasswordViaEmail(email, newPassword)
-    return true
-}
-
-module.exports = {
-    getAccountByEmail,
-    createAccount,
-    resetPassword,
-    changePassword,
-    updateAccount,
-    deleteAccount
+  return extractedAccount;
 };
 
+async function updateAccount(id, name, avatarUrl) {
+  const account = await getAccountByIdWithThrow(id);
+  const newAccount = db.account.update({
+    where: {
+      id: account.id,
+    },
+    data: {
+      name,
+      avatarUrl,
+    },
+    select: {
+      password: false,
+      id: true,
+      avatarUrl: true,
+      email: true,
+      metadata: true,
+      name: true,
+    },
+  });
+  return newAccount;
+}
+
+async function deleteAccount(id) {
+  const account = await getAccountByIdWithThrow(id);
+
+  return db.account.update({
+    where: {
+      id: account.id,
+    },
+    data: {
+      metadata: {
+        enabled: false,
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      avatarUrl: true,
+      metadata: true,
+    },
+  });
+}
+
+const changePassword = async (id, password) => {
+  const newPassword = hash(password);
+
+  await db.account.update({
+    where: {
+      id,
+    },
+    data: {
+      password: newPassword,
+    },
+  });
+
+  return true;
+};
+
+const checkAndChangePassword = async (id, oldPassword, newPassword) => {
+  const account = await getAccountByIdWithThrow(id, true);
+
+  if (hash(oldPassword) === account.password) {
+    changePassword(account.id, newPassword);
+
+    return true;
+  }
+  throw new InvalidFieldError('Given old password does not match!');
+};
+
+const resetPassword = async (email) => {
+  const newPassword = getRandomString(12);
+
+  const account = await getAccountByEmailWithThrow(email);
+
+  await changePassword(account.id, newPassword);
+
+  await sendResetPasswordViaEmail(email, newPassword);
+  return true;
+};
+
+module.exports = {
+  createAccount,
+  getAccountByIdWithThrow,
+  getAccountByEmailWithThrow,
+  checkAndChangePassword,
+  updateAccount,
+  deleteAccount,
+  resetPassword,
+};

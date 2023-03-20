@@ -11,10 +11,89 @@ datasource db {
 }
 
 model Account {
-  id        String @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
-  email     String @unique
+  email     String    @unique
   password  String
-  avatarUrl String @map("avatar_url")
+  avatarUrl String    @map("avatar_url")
   metadata  Json
+  Recipe    Recipe[]
+  Menu      Menu[]
+  Comment   Comment[]
+}
+
+model Recipe {
+  id          String @id @default(uuid())
+  name        String
+  description String
+
+  author   Account @relation(fields: [authorId], references: [id])
+  authorId String  @map("author_id")
+
+  ingredients Json
+  steps       Json
+
+  serveFor    Int @map("serve_for")
+  prepareTime Int @map("prepare_time")
+
+  cookTime  Int      @map("cook_time")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  metadata Json?
+
+  status     Boolean
+  categories RecipeCategory[]
+  MenuRecipe MenuRecipe[]
+  Comment    Comment[]
+}
+
+model Category {
+  id String @id @default(uuid())
+
+  title String
+
+  recipes RecipeCategory[]
+}
+
+model RecipeCategory {
+  Recipe     Recipe   @relation(fields: [recipeId], references: [id])
+  recipeId   String   @map("recipe_id")
+  Category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String   @map("category_id")
+
+  @@id([recipeId, categoryId])
+}
+
+model Menu {
+  id   String @id @default(uuid())
+  name String
+
+  owner   Account @relation(fields: [ownerId], references: [id])
+  ownerId String  @map("owner_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  metadata   Json
+  MenuRecipe MenuRecipe[]
+}
+
+model MenuRecipe {
+  menu     Menu   @relation(fields: [menuId], references: [id])
+  menuId   String @map("menu_id")
+  recipe   Recipe @relation(fields: [recipeId], references: [id])
+  recipeId String @map("recipe_id")
+
+  @@id([menuId, recipeId])
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  account   Account  @relation(fields: [accountId], references: [id])
+  accountId String   @map("account_id")
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+  recipeId  String   @map("recipe_id")
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
 }

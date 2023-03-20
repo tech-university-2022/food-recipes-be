@@ -1,24 +1,25 @@
 const express = require('express');
-const accountController = require('../../controllers/account.controller.js');
-const mapResponse = require('../../middlewares/response.middleware.js')
-const auth = require('../../middlewares/auth.middleware.js');
-
+const accountController = require('../../controllers/account.controller');
+const auth = require('../../middlewares/auth.middleware');
+const { generateValidationMiddleware } = require('../../middlewares/validation.middleware');
+const accountSchema = require('../../validations/account.schema');
 
 const router = express.Router();
 
-router.post('/create', accountController.createAccount)
-router.post('/login', accountController.login)
-router.get('/protected', auth, (req, res, next) => {
-    res.json({ "accountId": req.accountId })
-})
+// TODO: add joi middleware to check on inputs
 
-router.patch('/update/:email', accountController.update,(req,res,next)=>{
-    const updatedInfor = accountController.update()
-    res.send(updatedInfor)
-})
-router.delete('/delete/:email',accountController.deleteAccount)
+router.post('/login', generateValidationMiddleware(accountSchema, 'body'), accountController.login);
+router.get('/protected', auth, (req, res) => {
+  res.json({ accountId: req.accountId });
+});
 
-router.post('/password/reset', accountController.resetPassword)
+router.get('/', auth, accountController.viewMyAccount);
+router.post('/create', accountController.createAccount);
+router.put('/', auth, accountController.updateAccount);
+router.delete('/', auth, accountController.deleteAccount);
 
+router.post('/password', auth, accountController.changePassword);
+router.post('/password/reset', accountController.resetPassword);
 
+// where is update ?
 module.exports = { accountRouter: router };
